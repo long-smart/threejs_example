@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="../node_modules/three/build/three.js"></script>
+    <script src="../node_modules/three/examples/js/controls/OrbitControls.js"></script>
+    <script src="../node_modules/three/examples/js/loaders/TGALoader.js"></script>
+    <script src="../node_modules/three/examples/js/loaders/FBXLoader.js"></script>
+    <script src="./assets/js/zlib.min.js"></script>
+    <script src="assets/js/Inflate.min.js"></script>
+    <script>
+        const Inflate = Zlib.Inflate
+        const TGALoader = THREE.TGALoader
+    </script>
+
+</head>
+<body>
+<script>
+    const scene = new THREE.Scene();
+    // 设置相机
+    const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.set(100, 200, 200);
+    camera.lookAt(scene.position);
+
+    // 创建光
+    const pointLight = new THREE.PointLight(0xffffff);
+    pointLight.position.set(200, 300, 400);
+    scene.add(pointLight);
+    // 创建环境光
+    const ambientLight = new THREE.AmbientLight(0x444444);
+    scene.add(ambientLight);
+
+    const loader = new THREE.FBXLoader( );
+    loader.load('assets/fbx/jigui.FBX', function (object) {  // 模型，3ds格式，替换成自己的
+        console.log(object)
+        // object.traverse( function ( child ) {
+        //     if ( child instanceof THREE.Mesh ) {
+        //         child.material.normalMap = normal;
+        //     }
+        // });
+        scene.add(object);
+    });
+
+
+    // 创建渲染器
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    // renderer.setClearColor('orange')
+    document.body.appendChild(renderer.domElement);
+
+    const axisHelper = new THREE.AxesHelper(250);
+    scene.add(axisHelper);
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    render()
+    // 设置鼠标事件
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', render)
+
+
+</script>
+</body>
+</html>

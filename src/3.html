@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="../node_modules/three/build/three.js"></script>
+</head>
+<body>
+<script>
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(200, 300, 200);
+    camera.lookAt(scene.position)
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement);
+
+    // 添加光源
+    const light = new THREE.PointLight('#ffffff');
+    light.position.set(400, 200, 300)
+    scene.add(light)
+
+    const boxGeometry = new THREE.BoxGeometry(100, 100, 100);
+    const boxMaterial = new THREE.MeshLambertMaterial({
+        color: 'greenyellow'
+    });
+    const box = new THREE.Mesh(boxGeometry, boxMaterial);
+    scene.add(box);
+
+    renderer.render(scene, camera);
+</script>
+</body>
+</html>

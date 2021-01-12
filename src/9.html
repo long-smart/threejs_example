@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../node_modules/three/build/three.js"></script>
+    <script src="../node_modules/three/examples/js/controls/OrbitControls.js"></script>
+    <script src="../node_modules/three/examples/js/libs/stats.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<script>
+    const scene = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer();
+    document.body.appendChild(renderer.domElement);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    // 开启阴影
+    renderer.shadowMap.enabled = true;
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(100, 50, 90);
+    camera.lookAt(scene.position);
+    scene.add(camera);
+
+    const ambientLight = new THREE.AmbientLight(0xeeeeee, 0.4);
+    scene.add(ambientLight);
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(100, 100, 30)
+    spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 500;
+    scene.add(spotLight);
+
+    const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    scene.add(spotLightHelper);
+
+    const helper = new THREE.CameraHelper( spotLight.shadow.camera );
+    scene.add( helper );
+
+    // 创建平面
+    const planeGeometry = new THREE.PlaneGeometry(300, 200);
+    const planeMaterial = new THREE.MeshStandardMaterial({ color: '#00ff00' });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.position.y = -22
+    plane.rotation.x = -Math.PI / 2
+    // plane.castShadow = true;
+    plane.receiveShadow = true;
+    scene.add(plane);
+
+
+    // 创建球体
+    const sphereGeometry = new THREE.SphereGeometry(20, 50, 50);
+    const sphereMaterial = new THREE.MeshLambertMaterial({ color: 'skyblue'});
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
+    scene.add(sphere);
+
+
+    // 创建立方体
+    const cubeGeometry = new THREE.BoxGeometry(20, 15, 25);
+    const cubeMaterial = new THREE.MeshLambertMaterial({ color: 'hotpink' });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.position.set(-50, 0, 50);
+    cube.rotation.set(30, 20, 10);
+    cube.castShadow = true;
+    scene.add(cube);
+
+    // 添加鼠标操作
+    new THREE.OrbitControls(camera, renderer.domElement);
+    // 添加轴工具
+    const axesHelper = new THREE.AxesHelper(200);
+    scene.add(axesHelper);
+
+    // 加入性能监控
+    const stats = new Stats();
+    stats.setMode(0);
+    document.body.appendChild(stats.domElement);
+
+    let step = 0;
+    function animation() {
+        step += 0.04
+        sphere.position.x = 30 * Math.sin(step);
+        sphere.position.y = Math.abs(30 * Math.cos(step));
+
+
+        cube.position.x = 30 + (20 * Math.sin(step));
+        cube.position.y = Math.abs(20 * Math.cos(step));
+        cube.rotation.x = step;
+        cube.rotation.y = step;
+    }
+
+
+    render();
+    function render() {
+        window.requestAnimationFrame(render);
+        animation();
+        stats.update();
+        renderer.render(scene, camera);
+    }
+</script>
+</body>
+</html>
