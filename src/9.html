@@ -48,20 +48,19 @@
     // 创建平面
     const planeGeometry = new THREE.PlaneGeometry(300, 200);
     const planeMaterial = new THREE.MeshStandardMaterial({ color: '#00ff00' });
+    // 双面渲染
+    planeMaterial.side = THREE.DoubleSide;
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.position.y = -22
     plane.rotation.x = -Math.PI / 2
-    // plane.castShadow = true;
     plane.receiveShadow = true;
     scene.add(plane);
-
 
     // 创建球体
     const sphereGeometry = new THREE.SphereGeometry(20, 50, 50);
     const sphereMaterial = new THREE.MeshLambertMaterial({ color: 'skyblue'});
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.castShadow = true;
-    sphere.receiveShadow = true;
     scene.add(sphere);
 
 
